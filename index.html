@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Website</title>
+  <style>
+    @font-face {
+      font-family: 'Adelle Mono';
+      src: url('./css/fonts/AdelleMono-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'Adelle Mono';
+      src: url('./css/fonts/AdelleMono-Bold.ttf') format('truetype');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffff99;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-content {
+      text-align: center;
+    }
+
+    .loading-gif {
+      width: 150px;
+      height: 150px;
+      margin-bottom: 20px;
+    }
+
+    :root {
+      --dotted-line-style: 3px dotted #000000;
+      --dotted-offset: 4px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Adelle Mono', monospace;
+    }
+
+    body {
+      background-color: #ffff99;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      gap: 15px;
+    }
+
+    .column-left {
+      flex: 1;
+      background-color: #ffff99;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      height: 100%;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 8;
+    }
+
+    .left-middle {
+      padding: 20px 0 20px 30px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    #about-title {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .column-right {
+      flex: 3;
+      height: 100%;
+      overflow-y: auto;
+      background-color: #ffff99;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      position: relative;
+    }
+
+    .column-right::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: calc(75% - 20px);
+      height: 74px;
+      background-color: #ffff99;
+      z-index: 5;
+    }
+
+    .fixed-nav {
+      position: sticky;
+      top: 0;
+      padding: 20px 0;
+      z-index: 10;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: -60px;
+    }
+
+    .nav-left {
+      display: flex;
+      gap: 20px;
+    }
+
+    .fixed-nav a {
+      color: #000000;
+      text-decoration: none;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      position: relative;
+      margin-right: 0px;
+      margin-top: -2px;
+    }
+
+    .fixed-nav::after {
+        content: '';
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        right: 0;
+        height: 6px;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .fixed-nav a span {
+      position: relative;
+      z-index: 10;
+      transition: mix-blend-mode 0.3s ease;
+    }
+
+    .fixed-nav a:hover, .fixed-nav a.active {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 4px;
+    }
+
+    .scroll-prompt {
+      color: #000000;
+      text-decoration: none;
+      font-weight: normal;
+      text-transform: none;
+      margin: 0 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      white-space: nowrap;
+      padding-right: 85px;
+    }
+
+    .scroll-prompt.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1100px) {
+      .scroll-prompt {
+        display: none !important;
+      }
+    }
+
+    .scrollable-content {
+      flex-grow: 1;
+      background-color: #ffff99;
+      padding: 92px 0;
+    }
+
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .image-box {
+      margin-bottom: 35px;
+      position: relative;
+    }
+
+    .image-box:not(:last-child)::after {
+      content: '';
+      display: block;
+      width: 100%;
+      border-bottom: var(--dotted-line-style);
+      position: absolute;
+      bottom: -35px;
+    }
+
+    .image-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .slideshow-slide {
+      display: none;
+      width: 100%;
+    }
+
+    .slideshow-slide.active {
+      display: block;
+    }
+
+    .slideshow-nav {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .slideshow-dot {
+      cursor: pointer;
+      height: 15px;
+      width: 15px;
+      margin: 0 5px;
+      background-color: #000000;
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .slideshow-dot.active, .slideshow-dot:hover {
+      opacity: 1;
+    }
+
+    .triple-image-container, .dual-image-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .triple-image-container img {
+      width: calc(33.33% - 7px);
+      cursor: pointer;
+    }
+
+    .dual-image-container img {
+      width: calc(50% - 5px);
+      cursor: pointer;
+    }
+
+    .logo-subtitle {
+      text-align: center;
+      margin-top: -6px;
+    }
+
+    .resume-link {
+      margin-bottom: 15px;
+      display: block;
+      font-weight: bold;
+      text-decoration: none;
+      color: #000000;
+      padding-left: 30px;
+    }
+
+    .resume-link:hover {
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-decoration-thickness: 3px;
+      text-underline-offset: 4px;
+    }
+
+    .social-buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 5px;
+      justify-content: flex-start;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .top-button-container {
+      position: absolute;
+      right: 30px;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .top-button-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .top-button-text {
+      transition: opacity 0.3s ease;
+    }
+
+    .top-button {
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .top-button svg {
+      width: 40px;
+      height: 40px;
+      fill: #ffff99;
+    }
+
+    .social-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .social-button:hover {
+      transform: scale(1.25);
+    }
+
+    .social-button svg {
+      width: 42px;
+      height: 42px;
+      fill: #000000;
+      transition: all 0.2s ease;
+    }
+
+    .right-footer {
+      margin-top: 0px;
+      padding-top: 20px;
+      border-top: 3px dotted #000000;
+      text-align: left;
+      font-size: 12px;
+      margin-bottom: -60px;
+    }
+
+    .contact-info {
+      padding-left: 30px;
+    }
+    .contact-info p:first-child {
+      margin-bottom: 15px;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .fade-in.appear {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Image expand overlay */
+    .image-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+
+    .expanded-image {
+      max-height: 90vh;
+      max-width: 90vw;
+      object-fit: contain;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+      }
+
+      @media (max-width: 768px) {
+        .fixed-nav::after {
+            display: none;
+            }
+        }
+
+      .column-left {
+        height: auto;
+        position: static;
+        text-align: center;
+        overflow: visible;
+      }
+
+      .column-right {
+        text-align: center;
+        overflow: visible;
+        height: auto;
+        padding-bottom: 7px;
+      }
+
+      .column-right::before {
+        display: none;
+      }
+
+      body {
+        overflow: auto;
+        height: auto;
+      }
+
+      .left-middle {
+        display: none;
+      }
+
+      .fixed-nav {
+        position: static;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
+        text-align: center;
+      }
+
+      .nav-left {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        align-items: center;
+      }
+      
+      .social-button {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .social-button svg {
+        width: 36px;
+        height: 36px;
+      }
+
+      .social-buttons {
+        justify-content: center;
+        padding-left: 0;
+      }
+
+      .top-button-container {
+        display: none;
+      }
+
+      .triple-image-container, .dual-image-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .triple-image-container img, .dual-image-container img {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      .right-footer {
+        text-align: center;
+      }
+
+      .resume-link,
+      .contact-info {
+        padding-left: 0;
+        text-align: center;
+      }
+      
+      .logo-subtitle {
+        margin-bottom: 30px;
+      }
+
+      /* Move first image up in mobile view */
+      .image-container .image-box:first-child {
+        margin-top: -60px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .social-buttons {
+        justify-content: center;
+        padding-left: 0;
+        margin-top: 0-30px; /* Move the social buttons up by 90px */
+        margin-bottom: 30px;
+      }
+    }
+
+    @media (min-width: 769px) {
+      @media (max-width: 1820px) {
+        .top-button-text {
+          opacity: 0;
+          width: 0;
+          overflow: hidden;
+        }
+      }
+      
+      @media (max-width: 1300px) {
+        .top-button-container {
+          display: none;
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen">
+    <div class="loading-content">
+      <img src="https://via.placeholder.com/150" alt="Loading..." class="loading-gif">
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="column-left">
+      <div class="left-top fade-in">
+        <img src="images/name-custom-thick.gif" alt="Logo" style="width: 100%; height: auto;">
+        <p class="logo-subtitle fade-in">Fucking hire me pls!</p>
+      </div>
+
+      <div class="left-middle fade-in">
+        <h2 id="about-title">ABOUT</h2>
+        <p id="about-text">James McGurk is a graphic designer and illustrator based in Illinois. He is a digital creator who is obsessed with shapes, type and how they work together. With a love for all things illustration, he transfers what he knows about composition, color, and character design into a world of branding, typography, and web design. As someone who loves to try new ideas and experiment, James enjoys working with others and their ideas to create something new.</p>
+      </div>
+
+      <div class="left-bottom">
+        <a href="https://acrobat.adobe.com/id/urn:aaid:sc:VA6C2:0317b7f4-22eb-4582-a517-3a4a4d1f933d" target="_blank" class="resume-link fade-in">RESUMÉ↗</a>
+        <div class="contact-info fade-in">
+          <p>jamesbmcgurk@gmail.com</p>
+          <p>+1 815 579 2367</p>
+        </div>
+        <div class="social-buttons">
+          <a href="https://www.instagram.com/jimaou/" target="_blank" class="social-button fade-in">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576.68 576.68">
+              <path d="M279.38.14C127.25,4.78,4.78,127.26.14,279.38c-5.1,167.2,129.96,302.26,297.15,297.16,152.13-4.64,274.61-127.12,279.25-279.25C581.64,130.09,446.58-4.96,279.38.14ZM427.85,432.81H148.87c-2.76,0-5-2.24-5-5V148.87c0-2.76,2.24-5,5-5h278.98c2.76,0,5,2.24,5,5v278.94c0,2.76-2.24,5-5,5Z"/>
+              <path d="M409.23,193.68c0,17.11-19.74,29.57-37.54,16.07-.25-.19-.47-.42-.65-.67-12.95-17.87-.55-37.19,16.41-37.19,12,0,21.79,9.74,21.79,21.79Z"/>
+              <path d="M288.34,198.59c-51.87,0-93.85,42.38-93.2,94.45.63,50.21,41.56,91.25,91.77,92,52.13.78,94.64-41.25,94.64-93.2s-41.73-93.25-93.21-93.25ZM290.29,352.34c-35.01,1.1-63.58-27.55-62.44-62.52,1.03-31.66,26.81-57.44,58.47-58.48,34.98-1.14,63.62,27.43,62.52,62.44-.99,31.72-26.84,57.56-58.56,58.55Z"/>
+            </svg>
+          </a>
+          <a href="https://www.youtube.com/@jimaou" target="_blank" class="social-button fade-in">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576.68 576.68">
+              <path fill="#010201" d="M254.34,341.68l84.88-49.01c3.33-1.92,3.33-6.74,0-8.66l-84.88-49.01c-3.33-1.92-7.5.48-7.5,4.33v98.01c0,3.85,4.17,6.25,7.5,4.33Z"/>
+              <path fill="#010201" d="M288.34,0C129.09,0,0,129.09,0,288.34c0,159.71,128.62,288.34,288.34,288.34,159.24,0,288.34-129.09,288.34-288.34C576.68,128.62,448.05,0,288.34,0ZM457.94,410.56H118.74c-2.76,0-5-2.24-5-5v-234.44c0-2.76,2.24-5,5-5h339.19c2.76,0,5,2.24,5,5v234.44c0,2.76-2.24,5-5,5Z"/>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/j4m35mcgurk/" target="_blank" class="social-button fade-in">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576.68 576.68">
+              <path d="M288.34,0C129.09,0,0,129.09,0,288.34s129.09,288.34,288.34,288.34,288.34-129.09,288.34-288.34S447.59,0,288.34,0ZM209.48,416.06c.04,3.37-.81,4.36-4.27,4.31-17.13-.17-34.22-.13-51.35,0-2.73,0-3.59-.68-3.59-3.5.09-61,.09-122,.04-183,0-2.52.6-3.42,3.29-3.42,17.34.13,34.73.17,52.07,0,3.33-.04,3.8,1.24,3.8,4.1-.09,30.37-.04,60.74-.04,91.11s-.09,60.27.04,90.39ZM179.92,204.36c-18.62,0-34.09-15.42-34.17-34.05-.04-18.84,15.42-34.3,34.26-34.3s34.13,15.38,34.13,34c.04,18.92-15.34,34.34-34.22,34.34ZM430.88,416.49c0,3.12-.85,3.93-3.93,3.89-17.09-.13-34.22-.13-51.35,0-3.03.04-3.67-.9-3.67-3.76.09-31.61.13-63.22.04-94.87-.04-7.9-.55-15.85-2.78-23.54-4.1-14.22-14.27-21.44-29.13-20.63-7.22.38-13.2,1.88-18.03,4.66-8.76,4.87-13.75,13.8-15.42,27.08-.34,2.78-.55,5.55-.73,8.33-.13,2.18-.17,4.36-.17,6.54.04,30.76-.04,61.51.09,92.27,0,3.08-.77,3.97-3.89,3.93-17.26-.13-34.52-.13-51.77,0-2.73,0-3.55-.73-3.55-3.55.09-60.87.09-121.79,0-182.66,0-3.03.98-3.72,3.85-3.72,16.36.13,32.76.13,49.12,0,3.03-.04,3.8.94,3.72,3.8-.17,7.26-.04,14.57-.04,21.83,3.93-4.44,7.22-8.93,11.28-12.77,12.47-11.75,27.21-17.68,44.47-17.51,9.44.04,18.84.73,27.94,3.37,20.89,6.07,33.02,20.42,38.83,40.84,4.31,15.29,5.12,31.01,5.17,46.73.04,33.28-.09,66.51-.04,99.74Z"/>
+            </svg>
+          </a>
+          
+          <div class="top-button-container">
+            <span class="top-button-text">Top of Page</span>
+            <div class="top-button">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576.68 576.68">
+                <path fill="#010201" d="M288.33,576.68c159.25,0,288.35-129.09,288.34-288.35C576.67,128.62,448.05,0,288.34,0,129.09,0,0,129.09,0,288.34c0,159.71,128.62,288.34,288.33,288.34ZM295.25,100.67l146.96,146.92c1.95,1.95,1.95,5.12,0,7.07l-33.72,33.72c-1.95,1.95-5.12,1.95-7.07,0l-80.87-80.87v269.07c0,2.76-2.24,5-5,5h-47.67c-2.76,0-5-2.24-5-5V207.52l-80.83,80.87c-1.95,1.95-5.12,1.95-7.07,0l-33.72-33.72c-1.95-1.95-1.95-5.12,0-7.07l146.92-146.92c1.95-1.95,5.12-1.95,7.07,0Z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column-right">
+      <div class="fixed-nav">
+        <div class="nav-left">
+          <a href="index.html" class="active fade-in"><span>Illustration</span></a>
+          <a href="books.html" class="fade-in"><span>Books</span></a>
+          <a href="editorial.html" class="fade-in"><span>Editorial</span></a>
+          <a href="design.html" class="fade-in"><span>Design</span></a>
+        </div>
+        <div>
+          <span class="scroll-prompt">[ Scroll to see more! ]</span>
+          <a href="https://www.etsy.com" target="_blank" class="fade-in"><span>STICKER SHOP↗</span></a>
+        </div>
+      </div>
+
+      <div class="scrollable-content">
+        <div class="image-container">
+            <div class="image-box fade-in" data-title="THEATRE FOR MEN" data-text="This is the description for Project Two. It explored X/Y/Z.">
+                <div class="triple-image-container">
+                  <img src="images/wrestler-1+.gif" alt="Image 2-1">
+                  <img src="images/wrestler-2.gif" alt="Image 2-2">
+                  <img src="images/wrestler-3.gif" alt="Image 2-3">
+                </div>
+            </div>
+
+          <div class="image-box fade-in" data-title="SHEDD AQUARIUM" data-text="This is the description for Project One. It focused on A/B/C.">
+            <img src="images/aquarius+.png" alt="Image 1">
+          </div>
+
+          <div class="image-box fade-in" data-title="BLANKET: ANIMATED SHORT" data-text="Typography-driven poster work and editorial layouts.">
+            <div class="video-container">
+              <iframe src="https://www.youtube.com/embed/oncbHXuVIa4?si=U6kauYl1nXX5_yfo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="image-box fade-in" data-title="CATWALK" data-text="Exploration in spatial layout and brand systems.">
+            <img src="images/catwalk-1.png" alt="Image 6">
+          </div>
+
+          <div class="image-box fade-in" data-title="DEATH METAL GEEZER" data-text="Creative experimentation with layout and visual rhythm.">
+            <div class="dual-image-container">
+              <img src="images/habits.jpg" alt="Image 3-1">
+              <img src="images/service-dog=.png" alt="Image 3-2">
+            </div>
+          </div>
+
+          <div class="image-box fade-in" data-title="GOONS" data-text="Exploration in spatial layout and brand systems.">
+            <img src="images/san-francisco-bc-2024.png" alt="Image 6">
+          </div>
+        </div>
+
+      <div class="right-footer">
+        <p>© 2025 JAMES McGURK Graphic Design & Illustration. ALL RIGHTS RESERVED.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function() {
+      const loadingScreen = document.querySelector('.loading-screen');
+      const elements = {
+        leftLogo: document.querySelector('.left-top'),
+        logoSubtitle: document.querySelector('.logo-subtitle'),
+        leftMiddle: document.querySelector('.left-middle'),
+        resumeLink: document.querySelector('.resume-link'),
+        contactInfo: document.querySelector('.contact-info'),
+        socialButtons: document.querySelectorAll('.social-buttons .social-button'),
+        navLinks: document.querySelectorAll('.fixed-nav a'),
+        imageBoxes: document.querySelectorAll('.image-box'),
+        scrollPrompt: document.querySelector('.scroll-prompt')
+      };
+      
+      setTimeout(function() {
+        loadingScreen.style.opacity = '0';
+        setTimeout(function() {
+          loadingScreen.style.display = 'none';
+          
+          setTimeout(() => {
+            elements.leftLogo.classList.add('appear');
+            elements.logoSubtitle.classList.add('appear');
+            
+            setTimeout(() => {
+              elements.navLinks[0].classList.add('appear');
+              
+              setTimeout(() => {
+                elements.navLinks[1].classList.add('appear');
+                
+                setTimeout(() => {
+                  elements.navLinks[2].classList.add('appear');
+                  
+                  setTimeout(() => {
+                    elements.navLinks[3].classList.add('appear');
+                    
+                    // Show scroll prompt 0.25s after DESIGN link appears
+                    setTimeout(() => {
+                      elements.scrollPrompt.classList.add('appear');
+                    }, 250);
+                    
+                    setTimeout(() => {
+                      elements.navLinks[4].classList.add('appear');
+                      
+                      setTimeout(() => {
+                        elements.imageBoxes.forEach((box, index) => {
+                          setTimeout(() => {
+                            box.classList.add('appear');
+                          }, index * 200);
+                        });
+                      }, 200);
+                      
+                    }, 300);
+                  }, 100);
+                }, 100);
+              }, 100);
+            }, 1500);
+            
+            setTimeout(() => {
+              elements.leftMiddle.classList.add('appear');
+              
+              setTimeout(() => {
+                elements.resumeLink.classList.add('appear');
+                elements.contactInfo.classList.add('appear');
+                
+                elements.socialButtons.forEach((button, index) => {
+                  setTimeout(() => {
+                    button.classList.add('appear');
+                  }, index * 100);
+                });
+                
+              }, 300);
+            }, 350);
+          }, 500);
+          
+        }, 500);
+      }, 1250);
+
+      // Update scroll prompt text based on screen size
+      function updateScrollPrompt() {
+        const scrollPrompt = document.querySelector('.scroll-prompt');
+        if (!scrollPrompt) return;
+        
+        if (window.innerWidth <= 1100) {
+          scrollPrompt.style.display = 'none';
+        } else {
+          scrollPrompt.style.display = 'inline';
+          if (window.innerWidth <= 1400) {
+            scrollPrompt.textContent = '[ Scroll! ]';
+          } else {
+            scrollPrompt.textContent = '[ Scroll to see more! ]';
+          }
+        }
+      }
+
+      window.addEventListener('resize', updateScrollPrompt);
+      updateScrollPrompt();
+    });
+
+    // Image expand functionality
+    document.querySelectorAll('.image-box img, .triple-image-container img, .dual-image-container img').forEach(img => {
+      img.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'image-overlay';
+        
+        const expandedImg = document.createElement('img');
+        expandedImg.className = 'expanded-image';
+        expandedImg.src = this.src;
+        expandedImg.alt = this.alt;
+        
+        const closeButton = document.createElement('span');
+        closeButton.className = 'close-button';
+        closeButton.innerHTML = '&times;';
+        closeButton.addEventListener('click', function(e) {
+          e.stopPropagation();
+          document.body.removeChild(overlay);
+        });
+        
+        overlay.appendChild(expandedImg);
+        overlay.appendChild(closeButton);
+        
+        overlay.addEventListener('click', function() {
+          document.body.removeChild(overlay);
+        });
+        
+        document.body.appendChild(overlay);
+      });
+    });
+
+    const imageBoxes = document.querySelectorAll('.image-box');
+    const aboutTitle = document.getElementById('about-title');
+    const aboutText = document.getElementById('about-text');
+    const defaultAboutTitle = aboutTitle.textContent;
+    const defaultAboutText = aboutText.textContent;
+
+    imageBoxes.forEach(box => {
+      box.addEventListener('mouseenter', function() {
+        const title = this.dataset.title;
+        const text = this.dataset.text;
+        if (title && text) {
+          aboutTitle.textContent = title;
+          aboutText.textContent = text;
+        }
+      });
+      
+      box.addEventListener('mouseleave', function() {
+        aboutTitle.textContent = defaultAboutTitle;
+        aboutText.textContent = defaultAboutText;
+      });
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const title = entry.target.dataset.title;
+          const text = entry.target.dataset.text;
+          if (title && text) {
+            aboutTitle.textContent = title;
+            aboutText.textContent = text;
+          }
+        }
+      });
+    }, {
+      root: document.querySelector('.column-right'),
+      threshold: 0.5
+    });
+
+    imageBoxes.forEach(box => observer.observe(box));
+
+    const navLinks = document.querySelectorAll('.fixed-nav a span');
+    const contentContainer = document.querySelector('.scrollable-content');
+    
+    function checkNavOverlap() {
+      const navBottom = document.querySelector('.fixed-nav').getBoundingClientRect().bottom;
+      const contentTop = contentContainer.getBoundingClientRect().top;
+      
+      navLinks.forEach(link => {
+        link.style.mixBlendMode = contentTop < navBottom ? 'difference' : 'normal';
+      });
+    }
+    
+    document.querySelector('.column-right').addEventListener('scroll', checkNavOverlap);
+    checkNavOverlap();
+
+    let slideIndex = 0;
+    
+    function currentSlide(n) {
+      const slides = document.querySelectorAll('.slideshow-slide');
+      const dots = document.querySelectorAll('.slideshow-dot');
+      
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      slides[n].classList.add('active');
+      dots[n].classList.add('active');
+      slideIndex = n;
+    }
+    
+    setInterval(() => {
+      const slides = document.querySelectorAll('.slideshow-slide');
+      const dots = document.querySelectorAll('.slideshow-dot');
+      slideIndex = (slideIndex + 1) % slides.length;
+      
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      slides[slideIndex].classList.add('active');
+      dots[slideIndex].classList.add('active');
+    }, 5000);
+    
+    const topButton = document.querySelector('.top-button');
+    const desktopTopButtonContainer = document.querySelector('.top-button-container');
+    const rightColumn = document.querySelector('.column-right');
+    
+    function scrollToTop() {
+      rightColumn.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    
+    if (topButton) topButton.addEventListener('click', scrollToTop);
+    
+    function handleScroll() {
+      const scrollPosition = rightColumn.scrollTop;
+      
+      if (desktopTopButtonContainer) {
+        desktopTopButtonContainer.classList.toggle('visible', scrollPosition > 300);
+      }
+    }
+    
+    rightColumn.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    handleScroll();
+  </script>
+</body>
+</html>
