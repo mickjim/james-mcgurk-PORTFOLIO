@@ -642,36 +642,48 @@
           <a href="design.html" class="fade-in"><span>Design</span></a>
         </div>
         <div>
-          <span class="scroll-prompt">[ Click to expand. ]</span>
+          <span class="scroll-prompt">[ Click to visit editorial. ]</span>
           <a href="https://mcgeezer.etsy.com" target="_blank" class="fade-in"><span>STICKER SHOP↗</span></a>
         </div>
       </div>
 
       <div class="scrollable-content">
         <div class="image-container">
-          <div class="image-box fade-in" data-title="FIVE LESSONS I LEARNED IN FOOD SERVICE" data-text="This piercing illustration sets the tone for the negative recounting of one editorial writer’s experience in the food service industry.">
-            <img src="images/sangwich-for-site.png" alt="Editorial Image 1">
-          </div>
+          <a href="https://www.videtteonline.com/viewpoint/craig-five-lessons-i-learned-from-working-in-food-service/article_b5a91be2-bb15-11ee-a688-e362723f63a4.html" target="_blank" class="image-link">
+            <div class="image-box fade-in" data-title="FIVE LESSONS I LEARNED IN FOOD SERVICE" data-text="This piercing illustration sets the tone for the negative recounting of one editorial writer’s experience in the food service industry.">
+              <img src="images/sangwich-for-site.png" alt="Editorial Image 1">
+            </div>
+          </a>
 
-          <div class="image-box fade-in" data-title="WHY SINGLE PLAYER GAMES ARE SUPERIOR" data-text="Showing the tranquility of a solo gamer immersed in the single player experience seemed to be a bright introduction for an editorial that speaks to the authors preferences.">
-            <img src="images/single-player-EXPO.png" alt="Editorial Image 2">
-          </div>
+          <a href="https://www.videtteonline.com/arts_life/serrano-why-single-player-games-are-superior-to-multiplayer-games/article_5069f76a-f0fd-11ee-bf06-fb0ee8df6798.html" target="_blank" class="image-link">
+            <div class="image-box fade-in" data-title="WHY SINGLE PLAYER GAMES ARE SUPERIOR" data-text="Showing the tranquility of a solo gamer immersed in the single player experience seemed to be a bright introduction for an editorial that speaks to the authors preferences.">
+              <img src="images/single-player-EXPO.png" alt="Editorial Image 2">
+            </div>
+          </a>
 
-          <div class="image-box fade-in" data-title="ACADEMIC SENATE'S DISMOUNT ZONE POLICY IS A HALF MEASURE" data-text="Following a controversial decision made by the academic senate, this piece depicts different students sharing the walkways that have come under scrutiny.">
-            <img src="images/viddy-asa-2.png" alt="Editorial Image 3">
-          </div>
+          <a href="https://www.videtteonline.com/academic-senate-dismount-zone-editorial-cartoon/image_f080dcd8-ee87-11ed-8272-23aec06cc147.html" target="_blank" class="image-link"></a>
+            <div class="image-box fade-in" data-title="ACADEMIC SENATE'S DISMOUNT ZONE POLICY IS A HALF MEASURE" data-text="Following a controversial decision made by the academic senate, this piece depicts different students sharing the walkways that have come under scrutiny.">
+              <img src="images/viddy-asa-2.png" alt="Editorial Image 3">
+            </div>
+          </a>
 
-          <div class="image-box fade-in" data-title="MAYBE ITS NOT A PHASE" data-text="As a nod to the famous emo record by the band American Football, this illustration accompanies an editorial written about the Central Illinois band scene, of which American Football came out of decades prior.">
-            <img src="images/midwest-emo.png" alt="Editorial Image 4">
-          </div>
+          <a href="https://www.videtteonline.com/arts_life/spoerlein-my-favorite-midwest-emo-bands/article_2b68cc36-0ed3-11ef-9d02-c3e2ee08626a.html" target="_blank" class="image-link"></a>
+            <div class="image-box fade-in" data-title="MAYBE ITS NOT A PHASE" data-text="As a nod to the famous emo record by the band American Football, this illustration accompanies an editorial written about the Central Illinois band scene, of which American Football came out of decades prior.">
+              <img src="images/midwest-emo.png" alt="Editorial Image 4">
+            </div>
+          </a>
 
-          <div class="image-box fade-in" data-title="RANKING UPTOWN-NORMAL BARS" data-text="To engage readers with an editorial written about the different local bars, this illustration’s disorientating style aims to put them in the headspace to remember their own times at the different establishments.">
-            <img src="images/bar-twirly-transparent.png" alt="Editorial Image 5">
-          </div>
+          <a href="https://www.videtteonline.com/viewpoint/editorial-uptown-normal-bars-ranked/article_a5e74a4a-b948-11ee-9e8e-d70ba50f3225.html" target="_blank" class="image-link"></a>
+            <div class="image-box fade-in" data-title="RANKING UPTOWN-NORMAL BARS" data-text="To engage readers with an editorial written about the different local bars, this illustration’s disorientating style aims to put them in the headspace to remember their own times at the different establishments.">
+              <img src="images/bar-twirly-transparent.png" alt="Editorial Image 5">
+            </div>
+          </a>
 
-          <div class="image-box fade-in" data-title="4/20 HOLIDAY GRAPHIC" data-text="This editorial illustration uses tall hedges as an innuendo to point to the increasingly popular April holiday.">
-            <img src="images/420.png" alt="Editorial Image 6">
-          </div>
+          <a href="https://www.instagram.com/the_vidette/p/CrRcN74u6ba/" target="_blank" class="image-link">
+            <div class="image-box fade-in" data-title="4/20 HOLIDAY GRAPHIC" data-text="This editorial illustration uses tall hedges as an innuendo to point to the increasingly popular April holiday.">
+              <img src="images/420.png" alt="Editorial Image 6">
+            </div>
+          </a>
 
         </div>
 
@@ -769,9 +781,9 @@
         } else {
           scrollPrompt.style.display = 'inline';
           if (window.innerWidth <= 1400) {
-            scrollPrompt.textContent = '[ Scroll! ]';
+            scrollPrompt.textContent = '[ Click! ]';
           } else {
-            scrollPrompt.textContent = '[ Scroll to see more! ]';
+            scrollPrompt.textContent = '[ Click to view editorial ]';
           }
         }
       }
@@ -780,37 +792,8 @@
       updateScrollPrompt();
     });
 
-    // Image expand functionality
-    document.querySelectorAll('.image-box img, .triple-image-container img, .dual-image-container img').forEach(img => {
-      img.addEventListener('click', function(e) {
-        e.stopPropagation();
-        
-        const overlay = document.createElement('div');
-        overlay.className = 'image-overlay';
-        
-        const expandedImg = document.createElement('img');
-        expandedImg.className = 'expanded-image';
-        expandedImg.src = this.src;
-        expandedImg.alt = this.alt;
-        
-        const closeButton = document.createElement('span');
-        closeButton.className = 'close-button';
-        closeButton.innerHTML = '&times;';
-        closeButton.addEventListener('click', function(e) {
-          e.stopPropagation();
-          document.body.removeChild(overlay);
-        });
-        
-        overlay.appendChild(expandedImg);
-        overlay.appendChild(closeButton);
-        
-        overlay.addEventListener('click', function() {
-          document.body.removeChild(overlay);
-        });
-        
-        document.body.appendChild(overlay);
-      });
-    });
+    // Image expand functionality would go directly below this line! //
+    
 
     const imageBoxes = document.querySelectorAll('.image-box');
     const aboutTitle = document.getElementById('about-title');
