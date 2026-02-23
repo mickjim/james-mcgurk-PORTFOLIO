@@ -7,18 +7,18 @@
   <link rel="icon" type="image/png" href="images/james-mcgurk-FAVICON.png">
   <link rel="stylesheet" href="https://use.typekit.net/vwc4tfp.css">
   <style>
-    /* Normal weight */
     body {
-      font-family: "Adelle mono", monospace;
+      font-family: "Adelle Mono", monospace; /* use exact Adobe name */
       font-weight: 400;
       font-style: normal;
+      background-color: #ffff99;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    /* Bold text */
     h1, h2, h3, .bold-text {
-      font-family: "Adelle mono", monospace;
+      font-family: "Adelle Mono", monospace;
       font-weight: 700;
-      font-style: normal;
     }
 
     .loading-screen {
@@ -54,7 +54,6 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Adelle mono', monospace;
     }
 
     body {
@@ -553,7 +552,7 @@
       .social-buttons {
         justify-content: center;
         padding-left: 0;
-        margin-top: 0-30px; /* Move the social buttons up by 90px */
+        margin-top: 15px; 
         margin-bottom: 30px;
       }
     }
@@ -571,6 +570,39 @@
         .top-button-container {
           display: none;
         }
+      }
+    }
+    /* ================= MOBILE FLOATING UP BUTTON ================= */
+
+    .mobile-up-button {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+
+      .mobile-up-button {
+        position: fixed;
+        bottom: 25px;
+        left: 20px;
+        width: 55px;
+        height: 55px;
+        z-index: 999;
+        cursor: pointer;
+
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+
+      .mobile-up-button.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .mobile-up-button img {
+        width: 100%;
+        height: auto;
+        display: block;
       }
     }
   </style>
@@ -901,6 +933,32 @@
     rightColumn.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
     handleScroll();
+    
+    const mobileUpButton = document.querySelector('.mobile-up-button');
+
+    function handleMobileScroll() {
+      if (window.innerWidth <= 768) {
+        const scrollPosition = window.scrollY;
+
+        if (mobileUpButton) {
+          mobileUpButton.classList.toggle('visible', scrollPosition > 300);
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleMobileScroll);
+
+    if (mobileUpButton) {
+      mobileUpButton.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
   </script>
+  <div class="mobile-up-button">
+    <img src="images/UP-BUTTON.svg" alt="Back to Top">
+  </div>
 </body>
 </html>
